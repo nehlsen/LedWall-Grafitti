@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(HelloQmlWorld LANGUAGES CXX)
+project(Grafitti LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -14,14 +14,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Core Quick REQUIRED)
 
 if(ANDROID)
-    add_library(HelloQmlWorld SHARED main.cpp qml.qrc)
+    add_library(Grafitti SHARED main.cpp qml.qrc)
 else()
-    add_executable(HelloQmlWorld main.cpp qml.qrc)
+    add_executable(Grafitti main.cpp qml.qrc)
 endif()
 
-target_compile_definitions(HelloQmlWorld
+target_compile_definitions(Grafitti
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
-target_link_libraries(HelloQmlWorld
+target_link_libraries(Grafitti
   PRIVATE Qt5::Core Qt5::Quick)
 
 # QtCreator supports the following variables for Android, which are identical to qmake Android variables.

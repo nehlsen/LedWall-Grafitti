@@ -10,7 +10,7 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Hello World")
+    title: qsTr("Grafitti")
 
     Component.onCompleted: {
          Api.api.update();
@@ -33,12 +33,6 @@ Window {
 
         Mode {
             id: mode
-//            anchors.top: parent.top
-//            anchors.topMargin: 10
-//            anchors.right: parent.right
-//            anchors.rightMargin: 10
-//            anchors.left: parent.left
-//            anchors.leftMargin: 10
         }
 
         state: "loading"
@@ -73,29 +67,5 @@ Window {
                 }
             }
         ]
-    }
-
-    Rectangle {
-        id: button
-        anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.bottom: parent.bottom
-        anchors.margins: 10
-        width: buttonText.width + 10
-        height: buttonText.height + 10
-        radius : 5;
-        border.width: 2;
-        antialiasing: true
-
-        Text {
-            id: buttonText;
-            text: "do it!"
-            anchors.centerIn: parent
-        }
-
-        MouseArea {
-            id: mouseArea
-            anchors.fill: parent
-            onClicked: Api.getMode()
-        }
     }
 }
