@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Mode.ui.qml</file>
+        <file>PowerForm.ui.qml</file>
+        <file>api.js</file>
+    </qresource>
+</RCC>
