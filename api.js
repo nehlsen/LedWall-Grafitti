@@ -27,18 +27,27 @@ var api = (function () {
     return setPower(state.power.power === 0);
   };
 
-  let getMode = function () {
-    log("getMode()");
-
-    apiGet("/led/mode", (responseObject) => {
-      state.mode = responseObject;
-      mode.name.text = state.mode.name;
-    });
-  };
-
   let onPowerResponse = function (powerObject) {
     state.power = powerObject;
     power.toggler.checked = state.power.power == 1;
+  };
+
+  let getMode = function () {
+    log("getMode()");
+
+    apiGet("/led/mode", onModeResponse);
+  };
+
+  let setMode = function (modeIndex) {
+    log("setMode(" + modeIndex + ")");
+
+    apiSet("/led/mode", {"index": modeIndex}, onModeResponse);
+  };
+
+  let onModeResponse = function (modeObject) {
+    state.mode = modeObject;
+    // mode.name.text = state.mode.name;
+    mainView.currentIndex = state.mode.index
   };
 
   /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ******/
@@ -53,15 +62,14 @@ var api = (function () {
         case XMLHttpRequest.OPENED:
           break;
         case XMLHttpRequest.HEADERS_RECEIVED:
-          hndlHeaders();
+          hndlHeaders(xhr);
           break;
         case XMLHttpRequest.LOADING:
           hndlLoading();
           break;
         case XMLHttpRequest.DONE:
-          log(xhr.response);
           callback(JSON.parse(xhr.responseText));
-          hndlDone();
+          hndlDone(xhr);
           break;
       }
     };
@@ -80,15 +88,14 @@ var api = (function () {
         case XMLHttpRequest.OPENED:
           break;
         case XMLHttpRequest.HEADERS_RECEIVED:
-          hndlHeaders();
+          hndlHeaders(xhr);
           break;
         case XMLHttpRequest.LOADING:
           hndlLoading();
           break;
         case XMLHttpRequest.DONE:
-          log(xhr.response);
           callback(JSON.parse(xhr.responseText));
-          hndlDone();
+          hndlDone(xhr);
           break;
       }
     };
@@ -98,14 +105,15 @@ var api = (function () {
     xhr.send(JSON.stringify(data));
   };
 
-  let hndlHeaders = function () {
+  let hndlHeaders = function (xhr) {
     // TODO handle 4xx, 5xx, etc
   };
   let hndlLoading = function () {
-    mainLayout.state = "loading";
+    control.state = "loading";
   };
-  let hndlDone = function () {
-    mainLayout.state = "ready";
+  let hndlDone = function (xhr) {
+    // log(xhr.response);
+    control.state = "ready";
   };
 
   let log = function (text) {
@@ -119,7 +127,8 @@ var api = (function () {
     getPower,
     setPower,
     togglePower,
-    getMode
+    getMode,
+    setMode,
   };
 })();
 
