@@ -3,6 +3,8 @@
 
 int main(int argc, char *argv[])
 {
+    QGuiApplication::setApplicationName("Grafitti");
+    QGuiApplication::setOrganizationName("nehlsen");
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
