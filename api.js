@@ -1,10 +1,18 @@
 var api = (function () {
-  const API_BASE_URL = "http://10.13.37.222/api/v1"; // ! NOT terminated
+  let apiHost = "10.13.37.222";
+  let apiBaseUrl = function () {
+    return "http://" + apiHost + "/api/v1"; // ! NOT terminated
+  };
 
   let state = {
     power: null, // {power:INT}
     mode: null, // {index:INT, name:STRING, options:OBJ }
   };
+
+  let setHost = function (host) {
+    log("setHost(" + host + ")");
+    apiHost = host;
+  }
 
   let update = function () {
     getPower();
@@ -29,7 +37,8 @@ var api = (function () {
 
   let onPowerResponse = function (powerObject) {
     state.power = powerObject;
-    power.toggler.checked = state.power.power == 1;
+    // power.toggler.checked = state.power.power == 1;
+    powerSwitch.checked = state.power.power == 1;
   };
 
   let getMode = function () {
@@ -74,7 +83,7 @@ var api = (function () {
       }
     };
 
-    xhr.open("GET", API_BASE_URL + path);
+    xhr.open("GET", apiBaseUrl() + path);
     xhr.send();
   };
 
@@ -100,7 +109,7 @@ var api = (function () {
       }
     };
 
-    xhr.open("POST", API_BASE_URL + path);
+    xhr.open("POST", apiBaseUrl() + path);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
   };
@@ -123,6 +132,7 @@ var api = (function () {
   /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ******/
 
   return {
+    setHost,
     update,
     getPower,
     setPower,

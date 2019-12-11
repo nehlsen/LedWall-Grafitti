@@ -14,7 +14,8 @@ ApplicationWindow {
     title: qsTr("Grafitti")
 
     Component.onCompleted: {
-         Api.api.update();
+        Api.api.setHost(settings.host);
+        Api.api.update();
     }
 
     Settings {
@@ -27,14 +28,11 @@ ApplicationWindow {
         state: "loading"
         states: [
             State {
-                name: "offline"
+                name: "loading"
                 PropertyChanges {
-                    target: mainLayout
+                    target: powerSwitch
                     enabled: false
                 }
-            },
-            State {
-                name: "loading"
                 PropertyChanges {
                     target: mainView
                     enabled: false
@@ -46,6 +44,10 @@ ApplicationWindow {
             },
             State {
                 name: "ready"
+                PropertyChanges {
+                    target: powerSwitch
+                    enabled: true
+                }
                 PropertyChanges {
                     target: mainView
                     enabled: true
@@ -78,10 +80,10 @@ ApplicationWindow {
             spacing: 20
             anchors.fill: parent
 
-            PowerForm {
-                id: power
-                toggler.onToggled: Api.api.togglePower()
-                Layout.minimumWidth: 1
+            Switch {
+                id: powerSwitch
+                onToggled: Api.api.togglePower()
+                text: "Power"
             }
 
             Label {
@@ -89,12 +91,15 @@ ApplicationWindow {
                 text: "Grafitti"
                 font.pixelSize: 20
                 elide: Label.ElideRight
+                leftPadding: optionsMenuButton.width
+                rightPadding: powerSwitch.width
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
                 Layout.fillWidth: true
             }
 
             ToolButton {
+                id: optionsMenuButton
                 action: optionsMenuAction
 
                 Menu {
@@ -121,9 +126,18 @@ ApplicationWindow {
         currentIndex: 1
         anchors.fill: parent
 
+        Timer {
+            id: modeChangeDelay
+            interval: 750
+            running: false
+            repeat: false
+            onTriggered: Api.api.setMode(mainView.currentIndex);
+        }
+
         onCurrentIndexChanged: {
             console.log("swiped! " + currentIndex)
-            document.setTimeout(function() { Api.api.setMode(currentIndex); }, 750);
+            modeChangeDelay.running = true
+//            document.setTimeout(function() { Api.api.setMode(currentIndex); }, 750);
 //            Api.api.setMode(currentIndex)
         }
 
@@ -172,13 +186,18 @@ ApplicationWindow {
                     horizontalAlignment: Label.AlignHCenter
                 }
 
-                Slider {
-                    id: sliderAnimateSpeed
-                    from: 0
-                    to: 255
-                    live: false
-                    stepSize: 1
-                    Layout.fillWidth: true
+                RowLayout {
+                    Label {
+                        text: "Speed"
+                    }
+                    Slider {
+                        id: sliderAnimateSpeed
+                        from: 0
+                        to: 255
+                        live: false
+                        stepSize: 1
+                        Layout.fillWidth: true
+                    }
                 }
 
                 ComboBox {
@@ -195,6 +214,10 @@ ApplicationWindow {
                         "WhiteSpark - fast",
                         "RainbowSpark"
                     ]
+                }
+
+                Rectangle {
+                    Layout.preferredHeight: 500
                 }
             }
         }
@@ -222,6 +245,7 @@ ApplicationWindow {
         standardButtons: Dialog.Ok | Dialog.Cancel
         onAccepted: {
             settings.host = editHost.text
+            Api.api.setHost(settings.host);
             settingsDialog.close()
         }
         onRejected: {
