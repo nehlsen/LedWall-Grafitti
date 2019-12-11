@@ -53,10 +53,30 @@ var api = (function () {
     apiSet("/led/mode", {"index": modeIndex}, onModeResponse);
   };
 
+  let setModeOptions = function (modeOptions) {
+    log("setModeOptions(" + JSON.stringify(modeOptions) + ")");
+    apiSet("/mode/options", modeOptions, onModeResponse);
+  };
+
   let onModeResponse = function (modeObject) {
+    log("onModeResponse(" + JSON.stringify(modeObject) + ")");
     state.mode = modeObject;
     // mode.name.text = state.mode.name;
     mainView.currentIndex = state.mode.index
+
+    switch (state.mode.index) {
+      case 0:
+        // status: no options
+        break;
+      case 1:
+        // sample: no options
+        break;
+      case 2:
+        // hsiboy
+        sliderAnimateSpeed.value = state.mode.options.animateSpeed;
+        comboAnimation.currentIndex = state.mode.options.animation;
+        break;
+    }
   };
 
   /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ******/
@@ -139,6 +159,7 @@ var api = (function () {
     togglePower,
     getMode,
     setMode,
+    setModeOptions,
   };
 })();
 

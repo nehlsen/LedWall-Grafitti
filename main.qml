@@ -91,8 +91,8 @@ ApplicationWindow {
                 text: "Grafitti"
                 font.pixelSize: 20
                 elide: Label.ElideRight
-                leftPadding: optionsMenuButton.width
-                rightPadding: powerSwitch.width
+//                leftPadding: optionsMenuButton.width
+//                rightPadding: powerSwitch.width
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
                 Layout.fillWidth: true
@@ -123,7 +123,7 @@ ApplicationWindow {
     SwipeView {
         id: mainView
 
-        currentIndex: 1
+        currentIndex: 2
         anchors.fill: parent
 
         Timer {
@@ -134,11 +134,10 @@ ApplicationWindow {
             onTriggered: Api.api.setMode(mainView.currentIndex);
         }
 
+        // fixme: handle only user change of index (not programatically)
         onCurrentIndexChanged: {
             console.log("swiped! " + currentIndex)
             modeChangeDelay.running = true
-//            document.setTimeout(function() { Api.api.setMode(currentIndex); }, 750);
-//            Api.api.setMode(currentIndex)
         }
 
         Pane {
@@ -186,6 +185,19 @@ ApplicationWindow {
                     horizontalAlignment: Label.AlignHCenter
                 }
 
+                Timer {
+                    id: modeOptionsChangeDelay
+                    interval: 750
+                    running: false
+                    repeat: false
+                    onTriggered: {
+                        Api.api.setModeOptions({
+                            "animateSpeed": sliderAnimateSpeed.value,
+                            "animation": comboAnimation.currentIndex
+                        });
+                    }
+                }
+
                 RowLayout {
                     Label {
                         text: "Speed"
@@ -197,11 +209,15 @@ ApplicationWindow {
                         live: false
                         stepSize: 1
                         Layout.fillWidth: true
+
+//                        onValueChanged: modeOptionsChangeDelay.running = true
+                        onMoved: modeOptionsChangeDelay.running = true
                     }
                 }
 
                 ComboBox {
                     id: comboAnimation
+                    Layout.fillWidth: true
                     model: [
                         "RingPair",
                         "DoubleChaser",
@@ -214,6 +230,8 @@ ApplicationWindow {
                         "WhiteSpark - fast",
                         "RainbowSpark"
                     ]
+//                    onCurrentIndexChanged: modeOptionsChangeDelay.running = true
+                    onActivated: modeOptionsChangeDelay.running = true
                 }
 
                 Rectangle {
@@ -308,7 +326,7 @@ ApplicationWindow {
 
             Label {
                 width: aboutDialog.availableWidth
-                text: "Most awesome Tool to create an original LedWall."
+                text: "Most awesome Tool to control an original LedWall."
                 wrapMode: Label.Wrap
                 font.pixelSize: 12
             }
