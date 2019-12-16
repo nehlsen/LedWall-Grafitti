@@ -41,6 +41,10 @@ ApplicationWindow {
                     target: loadingIndicator
                     visible: true
                 }
+                PropertyChanges {
+                    target: generalError
+                    visible: false
+                }
             },
             State {
                 name: "ready"
@@ -56,6 +60,29 @@ ApplicationWindow {
                     target: loadingIndicator
                     visible: false
                 }
+                PropertyChanges {
+                    target: generalError
+                    visible: false
+                }
+            },
+            State {
+                name: "error"
+                PropertyChanges {
+                    target: powerSwitch
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: mainView
+                    enabled: false
+                }
+                PropertyChanges {
+                    target: loadingIndicator
+                    visible: false
+                }
+                PropertyChanges {
+                    target: generalError
+                    visible: true
+                }
             }
         ]
     }
@@ -64,6 +91,13 @@ ApplicationWindow {
         id: loadingIndicator
         z: 100
         anchors.centerIn: parent
+    }
+    Label {
+        id: generalError
+        z: 110
+        anchors.centerIn: parent
+        text: "<b>Connection failed!</b>"
+        color: "red"
     }
 
     Action {

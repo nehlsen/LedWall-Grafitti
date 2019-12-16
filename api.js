@@ -84,22 +84,25 @@ var api = (function () {
   let apiGet = function (path, callback) {
     let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
-      // log("req state: " + xhr.readyState);
-      switch (xhr.readyState) {
-        case XMLHttpRequest.UNSENT:
-          break;
-        case XMLHttpRequest.OPENED:
-          break;
-        case XMLHttpRequest.HEADERS_RECEIVED:
-          hndlHeaders(xhr);
-          break;
-        case XMLHttpRequest.LOADING:
-          hndlLoading();
-          break;
-        case XMLHttpRequest.DONE:
-          callback(JSON.parse(xhr.responseText));
-          hndlDone(xhr);
-          break;
+      try {
+        switch (xhr.readyState) {
+          case XMLHttpRequest.UNSENT:
+            break;
+          case XMLHttpRequest.OPENED:
+            break;
+          case XMLHttpRequest.HEADERS_RECEIVED:
+            hndlHeaders(xhr);
+            break;
+          case XMLHttpRequest.LOADING:
+            hndlLoading();
+            break;
+          case XMLHttpRequest.DONE:
+            callback(JSON.parse(xhr.responseText));
+            hndlDone(xhr);
+            break;
+        }
+      } catch (e) {
+        hndlError(e)
       }
     };
 
@@ -110,22 +113,25 @@ var api = (function () {
   let apiSet = function (path, data, callback) {
     let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
-      // log("req state: " + xhr.readyState);
-      switch (xhr.readyState) {
-        case XMLHttpRequest.UNSENT:
-          break;
-        case XMLHttpRequest.OPENED:
-          break;
-        case XMLHttpRequest.HEADERS_RECEIVED:
-          hndlHeaders(xhr);
-          break;
-        case XMLHttpRequest.LOADING:
-          hndlLoading();
-          break;
-        case XMLHttpRequest.DONE:
-          callback(JSON.parse(xhr.responseText));
-          hndlDone(xhr);
-          break;
+      try {
+        switch (xhr.readyState) {
+          case XMLHttpRequest.UNSENT:
+            break;
+          case XMLHttpRequest.OPENED:
+            break;
+          case XMLHttpRequest.HEADERS_RECEIVED:
+            hndlHeaders(xhr);
+            break;
+          case XMLHttpRequest.LOADING:
+            hndlLoading();
+            break;
+          case XMLHttpRequest.DONE:
+            callback(JSON.parse(xhr.responseText));
+            hndlDone(xhr);
+            break;
+        }
+      } catch (e) {
+        hndlError(e)
       }
     };
 
@@ -135,7 +141,11 @@ var api = (function () {
   };
 
   let hndlHeaders = function (xhr) {
+    // log("headers: " + xhr);
     // TODO handle 4xx, 5xx, etc
+    if (xhr.status != 200) {
+      log("ERROR: response!=200 => " + xhr.status);
+    }
   };
   let hndlLoading = function () {
     control.state = "loading";
@@ -144,9 +154,13 @@ var api = (function () {
     // log(xhr.response);
     control.state = "ready";
   };
+  let hndlError = function (error) {
+    log("ERROR: " + error);
+    control.state = "offline";
+  };
 
   let log = function (text) {
-    console.log("API:" + text);
+    console.log("API: " + text);
   };
 
   /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ******/
