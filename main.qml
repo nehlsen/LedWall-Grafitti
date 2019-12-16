@@ -108,7 +108,6 @@ ApplicationWindow {
 
     header: ToolBar {
         background: Rectangle { color: "white" }
-//        Material.foreground: "white"
 
         RowLayout {
             spacing: 20
@@ -165,7 +164,11 @@ ApplicationWindow {
             interval: 750
             running: false
             repeat: false
-            onTriggered: Api.api.setMode(mainView.currentIndex);
+            onTriggered: {
+                Api.api.setMode(mainView.currentIndex);
+                lblActivated.opacity = 1.0
+                lblActivatedHide.start();
+            }
         }
 
         // fixme: handle only user change of index (not programatically)
@@ -283,6 +286,31 @@ ApplicationWindow {
 
         anchors.bottom: mainView.bottom
         anchors.horizontalCenter: parent.horizontalCenter
+    }
+
+    Label {
+        id: lblActivated
+        text: "Activated!"
+        anchors.centerIn: parent
+        opacity: 0
+
+        ParallelAnimation {
+            id: lblActivatedHide
+            ScaleAnimator {
+                target: lblActivated
+                from: 1.0
+                to: 1.8
+                duration: 600
+                easing: Easing.OutQuad
+            }
+            OpacityAnimator {
+                target: lblActivated
+                from: 1.0
+                to: 0.0
+                duration: 600
+                easing: Easing.OutQuad
+            }
+        }
     }
 
     Dialog {
