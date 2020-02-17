@@ -195,6 +195,74 @@ ApplicationWindow {
         }
 
         Pane {
+            id: settingsPageModeFireworks
+
+            width: mainView.width
+            height: mainView.height
+
+            ColumnLayout {
+                anchors.fill: parent
+
+                Label {
+                    text: "Fireworks"
+                    font.pixelSize: 18
+                    font.bold: true
+                    Layout.fillWidth: true
+                    horizontalAlignment: Label.AlignHCenter
+                }
+
+                Timer {
+                    id: fireworksOptionsChangeDelay
+                    interval: 750
+                    running: false
+                    repeat: false
+                    onTriggered: {
+                        Api.api.setModeOptions({
+                            "fadeRate": sliderFadeRate.value,
+                            "sparkRate": sliderSparkRate.value
+                        });
+                    }
+                }
+
+                RowLayout {
+                    Label {
+                        text: "Fade-Rate"
+                    }
+                    Slider {
+                        id: sliderFadeRate
+                        from: 0
+                        to: 255
+                        live: false
+                        stepSize: 1
+                        Layout.fillWidth: true
+
+                        onMoved: fireworksOptionsChangeDelay.running = true
+                    }
+                }
+
+                RowLayout {
+                    Label {
+                        text: "Spark-Rate"
+                    }
+                    Slider {
+                        id: sliderSparkRate
+                        from: 0
+                        to: 255
+                        live: false
+                        stepSize: 1
+                        Layout.fillWidth: true
+
+                        onMoved: fireworksOptionsChangeDelay.running = true
+                    }
+                }
+
+                Rectangle {
+                    Layout.preferredHeight: 500
+                }
+            }
+        }
+
+        Pane {
             id: settingsPageModeSample
 
             width: mainView.width
@@ -229,7 +297,7 @@ ApplicationWindow {
                 }
 
                 Timer {
-                    id: modeOptionsChangeDelay
+                    id: hsiboyOptionsChangeDelay
                     interval: 750
                     running: false
                     repeat: false
@@ -253,8 +321,8 @@ ApplicationWindow {
 //                        stepSize: 1
 //                        Layout.fillWidth: true
 
-////                        onValueChanged: modeOptionsChangeDelay.running = true
-//                        onMoved: modeOptionsChangeDelay.running = true
+////                        onValueChanged: hsiboyOptionsChangeDelay.running = true
+//                        onMoved: hsiboyOptionsChangeDelay.running = true
 //                    }
 //                }
 
@@ -280,7 +348,7 @@ ApplicationWindow {
                         "RainbowSpark"
                     ]
 
-                    onActivated: modeOptionsChangeDelay.restart()
+                    onActivated: hsiboyOptionsChangeDelay.restart()
                 }
 
 
@@ -297,7 +365,7 @@ ApplicationWindow {
                     stepSize: 1
                     Layout.fillWidth: true
 
-                    onMoved: modeOptionsChangeDelay.restart()
+                    onMoved: hsiboyOptionsChangeDelay.restart()
 
                     Label {
                         text: Math.round(parent.value)

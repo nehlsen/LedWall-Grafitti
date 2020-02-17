@@ -69,9 +69,14 @@ var api = (function () {
         // status: no options
         break;
       case 1:
-        // sample: no options
+        // fireworks
+        sliderFadeRate.value = state.mode.options.fadeRate;
+        sliderSparkRate.value = state.mode.options.sparkRate;
         break;
       case 2:
+        // sample: no options
+        break;
+      case 3:
         // hsiboy
         sliderAnimateSpeed.value = state.mode.options.animateSpeed;
         comboAnimation.currentIndex = state.mode.options.animation;
