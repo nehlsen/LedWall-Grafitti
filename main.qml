@@ -185,6 +185,8 @@ ApplicationWindow {
 
             Label {
                 text: "Status"
+                font.pixelSize: 18
+                font.bold: true
                 anchors.fill: parent
                 horizontalAlignment: Label.AlignHCenter
             }
@@ -200,6 +202,8 @@ ApplicationWindow {
 
             Label {
                 text: "Sample"
+                font.pixelSize: 18
+                font.bold: true
                 anchors.fill: parent
                 horizontalAlignment: Label.AlignHCenter
             }
@@ -218,6 +222,8 @@ ApplicationWindow {
 
                 Label {
                     text: "Hsiboy"
+                    font.pixelSize: 18
+                    font.bold: true
                     Layout.fillWidth: true
                     horizontalAlignment: Label.AlignHCenter
                 }
@@ -291,6 +297,8 @@ ApplicationWindow {
     Label {
         id: lblActivated
         text: "Activated!"
+        font.pixelSize: 20
+        font.bold: true
         anchors.centerIn: parent
         opacity: 0
 
