@@ -241,23 +241,29 @@ ApplicationWindow {
                     }
                 }
 
-                RowLayout {
-                    Label {
-                        text: "Speed"
-                    }
-                    Slider {
-                        id: sliderAnimateSpeed
-                        from: 0
-                        to: 255
-                        live: false
-                        stepSize: 1
-                        Layout.fillWidth: true
+//                RowLayout {
+//                    Label {
+//                        text: "Speed"
+//                    }
+//                    Slider {
+//                        id: sliderAnimateSpeed
+//                        from: 0
+//                        to: 255
+//                        live: false
+//                        stepSize: 1
+//                        Layout.fillWidth: true
 
-//                        onValueChanged: modeOptionsChangeDelay.running = true
-                        onMoved: modeOptionsChangeDelay.running = true
-                    }
+////                        onValueChanged: modeOptionsChangeDelay.running = true
+//                        onMoved: modeOptionsChangeDelay.running = true
+//                    }
+//                }
+
+                Label {
+                    text: "Mode"
+                    font.bold: true
+                    Layout.fillWidth: true
+                    horizontalAlignment: Label.AlignHCenter
                 }
-
                 ComboBox {
                     id: comboAnimation
                     Layout.fillWidth: true
@@ -273,8 +279,30 @@ ApplicationWindow {
                         "WhiteSpark - fast",
                         "RainbowSpark"
                     ]
-//                    onCurrentIndexChanged: modeOptionsChangeDelay.running = true
-                    onActivated: modeOptionsChangeDelay.running = true
+
+                    onActivated: modeOptionsChangeDelay.restart()
+                }
+
+
+                Label {
+                    text: "Speed"
+                    font.bold: true
+                    Layout.fillWidth: true
+                    horizontalAlignment: Label.AlignHCenter
+                }
+                Dial {
+                    id: sliderAnimateSpeed
+                    from: 0
+                    to: 255
+                    stepSize: 1
+                    Layout.fillWidth: true
+
+                    onMoved: modeOptionsChangeDelay.restart()
+
+                    Label {
+                        text: Math.round(parent.value)
+                        anchors.centerIn: parent
+                    }
                 }
 
                 Rectangle {
