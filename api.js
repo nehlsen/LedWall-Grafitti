@@ -15,20 +15,23 @@ var api = (function () {
   }
 
   let update = function () {
-    getPower();
-    getMode();
+    getPower(() => {
+      getModes(() => {
+        getMode();
+      });
+    });
   };
 
-  let getPower = function () {
+  let getPower = function (fnAfter) {
     log("getPower()");
 
-    apiGet("/led/power", onPowerResponse);
+    apiGet("/led/power", (responseObject) => { onPowerResponse(responseObject); if (fnAfter) fnAfter(); });
   };
 
-  let setPower = function (on) {
-    log("setPower(" + on + ")");
+  let setPower = function (isOn) {
+    log("setPower(" + isOn + ")");
 
-    apiSet("/led/power", {"power": on ? 1 : 0}, onPowerResponse);
+    apiSet("/led/power", {"power": isOn ? 1 : 0}, onPowerResponse);
   };
 
   let togglePower = function () {
@@ -41,10 +44,65 @@ var api = (function () {
     powerSwitch.checked = state.power.power == 1;
   };
 
-  let getMode = function () {
+  let getModes = function (fnAfter) {
+    log("getModes()");
+
+    apiGet("/led/modes", (responseObject) => { onModesResponse(responseObject); if (fnAfter) fnAfter(); });
+  };
+
+  let onModesResponse = function (modesObject) {
+    log("onModesResponse(" /*+ JSON.stringify(modesObject)*/ + ")");
+// {"modes":[{"index":0,"name":"Status"},{"index":1,"name":"Bars"},{"index":2,"name":"MultiBars"},{"index":3,"name":"Fireworks"},{"index":4,"name":"Sample"},{"index":5,"name":"Hsiboy"},{"index":6,"name":"Fire"},{"index":7,"name":"Camera"},{"index":8,"name":"Network"},{"index":9,"name":"Breathe"},{"index":10,"name":"Text"}]}
+
+      // clear swipe view
+    while (mainView.count > 0) {
+      mainView.takeItem(0).destroy();
+    }
+
+    let finishCreation = (qmlComponent, mode) => {
+      console.log("=> finishCreation (" + mode.name + ")...");
+      qmlComponent.createObject(mainView, {
+        api: api,
+        modeName: mode.name,
+        modeOptions: mode.options
+      });
+    };
+
+    modesObject.modes.forEach(mode => {
+//      console.log("=> create pane for " + JSON.stringify(mode));
+      Qt.createComponent("qrc:/ModeOptions/ModeOptionsPane.qml");
+      var qmlComponent;
+      switch (mode.name) {
+        case "Status":
+//          Qt.createComponent("qrc:/ModeOptions/ModeOptionsStatus.qml").createObject(mainView, {modeName: "Status"});
+          qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsStatus.qml");
+          break;
+
+        case "Bars":
+//          Qt.createComponent("qrc:/ModeOptions/ModeOptionsBars.qml").createObject(mainView);
+          qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsBars.qml");
+          break;
+
+        default:
+//          console.log("(!) unable to handle " + mode.name);
+          return;
+      }
+
+      if (qmlComponent.status == Component.Ready) {
+        finishCreation(qmlComponent, mode);
+      } else if (qmlComponent.status == Component.Error) {
+        console.log("(!) component status error (" + mode.name + "):" + qmlComponent.errorString());
+      } else {
+        console.log("(!) component not ready (" + mode.name + ")...");
+        qmlComponent.statusChanged.connect(() => {finishCreation(qmlComponent, mode);});
+      }
+    });
+  };
+
+  let getMode = function (fnAfter) {
     log("getMode()");
 
-    apiGet("/led/mode", onModeResponse);
+    apiGet("/led/mode", (responseObject) => { onModeResponse(responseObject); if (fnAfter) fnAfter(); });
   };
 
   let setMode = function (modeIndex) {
@@ -61,8 +119,10 @@ var api = (function () {
   let onModeResponse = function (modeObject) {
     log("onModeResponse(" + JSON.stringify(modeObject) + ")");
     state.mode = modeObject;
+    mainView.currentItem.modeOptions = modeObject.options;
     // mode.name.text = state.mode.name;
-    mainView.currentIndex = state.mode.index
+    // FIXME set current view depending on "mode.name"
+/*    mainView.currentIndex = state.mode.index
 
     switch (state.mode.index) {
       case 0:
@@ -94,6 +154,7 @@ var api = (function () {
         comboAnimation.currentIndex = state.mode.options.animation;
         break;
     }
+*/
   };
 
   /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ******/
@@ -183,6 +244,7 @@ var api = (function () {
   /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ******/
 
   return {
+    state,
     setHost,
     update,
     getPower,

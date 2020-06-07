@@ -4,6 +4,10 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import Qt.labs.settings 1.0
 
+//import "qrc:/Status.qml" as ModeOptionsStatus
+import "ModeOptions"
+//import "qrc:/ModeOptions/ModeOptionsPane.qml"
+
 import "api.js" as Api
 
 ApplicationWindow {
@@ -12,6 +16,8 @@ ApplicationWindow {
     width: 640
     height: 480
     title: qsTr("Grafitti")
+
+//    ModeOptionsPane {/*modeName:"foo"*/}
 
     Component.onCompleted: {
         Api.api.setHost(settings.host);
@@ -156,7 +162,7 @@ ApplicationWindow {
     SwipeView {
         id: mainView
 
-        currentIndex: 2
+//        currentIndex: 2
         anchors.fill: parent
 
         Timer {
@@ -173,10 +179,15 @@ ApplicationWindow {
 
         // fixme: handle only user change of index (not programatically)
         onCurrentIndexChanged: {
+            if (control.state == "loading") return;
             console.log("swiped! " + currentIndex)
             modeChangeDelay.running = true
         }
 
+//        ModeOptionsStatus {}
+
+//        ModeOptionsBars {}
+        /*
         Pane {
             id: settingsPageModeStatus
 
@@ -548,6 +559,7 @@ ApplicationWindow {
                 }
             }
         }
+        */
     }
 
     PageIndicator {

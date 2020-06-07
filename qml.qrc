@@ -4,5 +4,8 @@
         <file>Mode.ui.qml</file>
         <file>PowerForm.ui.qml</file>
         <file>api.js</file>
+        <file>ModeOptions/ModeOptionsStatus.qml</file>
+        <file>ModeOptions/ModeOptionsBars.qml</file>
+        <file>ModeOptions/ModeOptionsPane.qml</file>
     </qresource>
 </RCC>
