@@ -7,5 +7,9 @@
         <file>ModeOptions/ModeOptionsStatus.qml</file>
         <file>ModeOptions/ModeOptionsBars.qml</file>
         <file>ModeOptions/ModeOptionsPane.qml</file>
+        <file>ModeOptions/ModeOptionsMultiBars.qml</file>
+        <file>ModeOptions/ModeOptionsFireworks.qml</file>
+        <file>ModeOptions/ModeOptionsSample.qml</file>
+        <file>ModeOptions/ModeOptionsHsiboy.qml</file>
     </qresource>
 </RCC>

@@ -3,11 +3,7 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import Qt.labs.settings 1.0
-
-//import "qrc:/Status.qml" as ModeOptionsStatus
 import "ModeOptions"
-//import "qrc:/ModeOptions/ModeOptionsPane.qml"
-
 import "api.js" as Api
 
 ApplicationWindow {
@@ -16,8 +12,6 @@ ApplicationWindow {
     width: 640
     height: 480
     title: qsTr("Grafitti")
-
-//    ModeOptionsPane {/*modeName:"foo"*/}
 
     Component.onCompleted: {
         Api.api.setHost(settings.host);
@@ -161,8 +155,6 @@ ApplicationWindow {
 
     SwipeView {
         id: mainView
-
-//        currentIndex: 2
         anchors.fill: parent
 
         Timer {
@@ -171,7 +163,7 @@ ApplicationWindow {
             running: false
             repeat: false
             onTriggered: {
-                Api.api.setMode(mainView.currentIndex);
+                Api.api.setMode(mainView.currentItem.modeName);
                 lblActivated.opacity = 1.0
                 lblActivatedHide.start();
             }
@@ -180,386 +172,9 @@ ApplicationWindow {
         // fixme: handle only user change of index (not programatically)
         onCurrentIndexChanged: {
             if (control.state == "loading") return;
-            console.log("swiped! " + currentIndex)
+            console.log("swiped! " + currentIndex + ":" + currentItem.modeName)
             modeChangeDelay.running = true
         }
-
-//        ModeOptionsStatus {}
-
-//        ModeOptionsBars {}
-        /*
-        Pane {
-            id: settingsPageModeStatus
-
-            width: mainView.width
-            height: mainView.height
-
-            Label {
-                text: "Status"
-                font.pixelSize: 18
-                font.bold: true
-                anchors.fill: parent
-                horizontalAlignment: Label.AlignHCenter
-            }
-
-            // no options
-        }
-
-        Pane {
-            id: settingsPageModeBars
-
-            width: mainView.width
-            height: mainView.height
-
-            ColumnLayout {
-                anchors.fill: parent
-
-                Label {
-                    text: "Bars"
-                    font.pixelSize: 18
-                    font.bold: true
-                    Layout.fillWidth: true
-                    horizontalAlignment: Label.AlignHCenter
-                }
-
-                Timer {
-                    id: barsOptionsChangeDelay
-                    interval: 750
-                    running: false
-                    repeat: false
-                    onTriggered: {
-                        Api.api.setModeOptions({
-                            "fadeRate": sliderBarsFadeRate.value,
-                            "barsRate": sliderBarsBarsRate.value
-                        });
-                    }
-                }
-
-                RowLayout {
-                    Label {
-                        text: "Fade-Rate"
-                    }
-                    Slider {
-                        id: sliderBarsFadeRate
-                        from: 0
-                        to: 255
-                        live: false
-                        stepSize: 1
-                        Layout.fillWidth: true
-
-                        onMoved: barsOptionsChangeDelay.running = true
-                    }
-                }
-
-                RowLayout {
-                    Label {
-                        text: "Bars-Rate"
-                    }
-                    Slider {
-                        id: sliderBarsBarsRate
-                        from: 0
-                        to: 255
-                        live: false
-                        stepSize: 1
-                        Layout.fillWidth: true
-
-                        onMoved: barsOptionsChangeDelay.running = true
-                    }
-                }
-
-                Rectangle {
-                    Layout.preferredHeight: 500
-                }
-            }
-        }
-
-        Pane {
-            id: settingsPageModeMultiBars
-
-            width: mainView.width
-            height: mainView.height
-
-            ColumnLayout {
-                anchors.fill: parent
-
-                Label {
-                    text: "MultiBars"
-                    font.pixelSize: 18
-                    font.bold: true
-                    Layout.fillWidth: true
-                    horizontalAlignment: Label.AlignHCenter
-                }
-
-                Timer {
-                    id: multiBarsOptionsChangeDelay
-                    interval: 750
-                    running: false
-                    repeat: false
-                    onTriggered: {
-                        Api.api.setModeOptions({
-                            "fadeRate": sliderMultiBarsFadeRate.value,
-                            "barTravelSpeed": sliderMultiBarsTravelSpeed.value,
-                            "numberOfBars": sliderMultiBarsNumberOfBars.value,
-                            "maximumFrameDelay": sliderMultiBarsMaximumFrameDelay.value
-                        });
-                    }
-                }
-
-                RowLayout {
-                    Label {
-                        text: "Fade-Rate"
-                    }
-                    Slider {
-                        id: sliderMultiBarsFadeRate
-                        from: 0
-                        to: 255
-                        live: false
-                        stepSize: 1
-                        Layout.fillWidth: true
-
-                        onMoved: multiBarsOptionsChangeDelay.running = true
-                    }
-                }
-
-                RowLayout {
-                    Label {
-                        text: "Travel-Speed"
-                    }
-                    Slider {
-                        id: sliderMultiBarsTravelSpeed
-                        from: 0
-                        to: 255
-                        live: false
-                        stepSize: 1
-                        Layout.fillWidth: true
-
-                        onMoved: multiBarsOptionsChangeDelay.running = true
-                    }
-                }
-
-                RowLayout {
-                    Label {
-                        text: "Number of Bars"
-                    }
-                    Slider {
-                        id: sliderMultiBarsNumberOfBars
-                        from: 0
-                        to: 10
-                        live: false
-                        stepSize: 1
-                        Layout.fillWidth: true
-
-                        onMoved: multiBarsOptionsChangeDelay.running = true
-                    }
-                }
-
-                RowLayout {
-                    Label {
-                        text: "Delay of new Bars"
-                    }
-                    Slider {
-                        id: sliderMultiBarsMaximumFrameDelay
-                        from: 0
-                        to: 255
-                        live: false
-                        stepSize: 1
-                        Layout.fillWidth: true
-
-                        onMoved: multiBarsOptionsChangeDelay.running = true
-                    }
-                }
-
-                Rectangle {
-                    Layout.preferredHeight: 500
-                }
-            }
-        }
-
-        Pane {
-            id: settingsPageModeFireworks
-
-            width: mainView.width
-            height: mainView.height
-
-            ColumnLayout {
-                anchors.fill: parent
-
-                Label {
-                    text: "Fireworks"
-                    font.pixelSize: 18
-                    font.bold: true
-                    Layout.fillWidth: true
-                    horizontalAlignment: Label.AlignHCenter
-                }
-
-                Timer {
-                    id: fireworksOptionsChangeDelay
-                    interval: 750
-                    running: false
-                    repeat: false
-                    onTriggered: {
-                        Api.api.setModeOptions({
-                            "fadeRate": sliderFadeRate.value,
-                            "sparkRate": sliderSparkRate.value
-                        });
-                    }
-                }
-
-                RowLayout {
-                    Label {
-                        text: "Fade-Rate"
-                    }
-                    Slider {
-                        id: sliderFadeRate
-                        from: 0
-                        to: 255
-                        live: false
-                        stepSize: 1
-                        Layout.fillWidth: true
-
-                        onMoved: fireworksOptionsChangeDelay.running = true
-                    }
-                }
-
-                RowLayout {
-                    Label {
-                        text: "Spark-Rate"
-                    }
-                    Slider {
-                        id: sliderSparkRate
-                        from: 0
-                        to: 255
-                        live: false
-                        stepSize: 1
-                        Layout.fillWidth: true
-
-                        onMoved: fireworksOptionsChangeDelay.running = true
-                    }
-                }
-
-                Rectangle {
-                    Layout.preferredHeight: 500
-                }
-            }
-        }
-
-        Pane {
-            id: settingsPageModeSample
-
-            width: mainView.width
-            height: mainView.height
-
-            Label {
-                text: "Sample"
-                font.pixelSize: 18
-                font.bold: true
-                anchors.fill: parent
-                horizontalAlignment: Label.AlignHCenter
-            }
-
-            // no options
-        }
-
-        Pane {
-            id: settingsPageModeHsiboy
-
-            width: mainView.width
-            height: mainView.height
-
-            ColumnLayout {
-                anchors.fill: parent
-
-                Label {
-                    text: "Hsiboy"
-                    font.pixelSize: 18
-                    font.bold: true
-                    Layout.fillWidth: true
-                    horizontalAlignment: Label.AlignHCenter
-                }
-
-                Timer {
-                    id: hsiboyOptionsChangeDelay
-                    interval: 750
-                    running: false
-                    repeat: false
-                    onTriggered: {
-                        Api.api.setModeOptions({
-                            "animateSpeed": sliderAnimateSpeed.value,
-                            "animation": comboAnimation.currentIndex
-                        });
-                    }
-                }
-
-//                RowLayout {
-//                    Label {
-//                        text: "Speed"
-//                    }
-//                    Slider {
-//                        id: sliderAnimateSpeed
-//                        from: 0
-//                        to: 255
-//                        live: false
-//                        stepSize: 1
-//                        Layout.fillWidth: true
-
-////                        onValueChanged: hsiboyOptionsChangeDelay.running = true
-//                        onMoved: hsiboyOptionsChangeDelay.running = true
-//                    }
-//                }
-
-                Label {
-                    text: "Mode"
-                    font.bold: true
-                    Layout.fillWidth: true
-                    horizontalAlignment: Label.AlignHCenter
-                }
-                ComboBox {
-                    id: comboAnimation
-                    Layout.fillWidth: true
-                    model: [
-                        "RingPair",
-                        "DoubleChaser",
-                        "TrippleBounce",
-                        "WaveInt",
-                        "Wave",
-                        "BlueSpark - slow",
-                        "BlueSpark - fast",
-                        "WhiteSpark - slow",
-                        "WhiteSpark - fast",
-                        "RainbowSpark"
-                    ]
-
-                    onActivated: hsiboyOptionsChangeDelay.restart()
-                }
-
-
-                Label {
-                    text: "Speed"
-                    font.bold: true
-                    Layout.fillWidth: true
-                    horizontalAlignment: Label.AlignHCenter
-                }
-                Dial {
-                    id: sliderAnimateSpeed
-                    from: 0
-                    to: 255
-                    stepSize: 1
-                    Layout.fillWidth: true
-
-                    onMoved: hsiboyOptionsChangeDelay.restart()
-
-                    Label {
-                        text: Math.round(parent.value)
-                        anchors.centerIn: parent
-                    }
-                }
-
-                Rectangle {
-                    Layout.preferredHeight: 500
-                }
-            }
-        }
-        */
     }
 
     PageIndicator {
@@ -587,14 +202,14 @@ ApplicationWindow {
                 from: 1.0
                 to: 1.8
                 duration: 600
-                easing: Easing.OutQuad
+//                easing: Easing.OutQuad
             }
             OpacityAnimator {
                 target: lblActivated
                 from: 1.0
                 to: 0.0
                 duration: 600
-                easing: Easing.OutQuad
+//                easing: Easing.OutQuad
             }
         }
     }

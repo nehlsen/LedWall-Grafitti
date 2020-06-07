@@ -8,17 +8,15 @@ ModeOptionsPane {
             return;
         }
 
-//        console.log("bars options changed");
-//        console.log(JSON.stringify(modeOptions));
-        sliderBarsFadeRate.value = modeOptions.fadeRate
-        sliderBarsBarsRate.value = modeOptions.barsRate
+        sliderFadeRate.value = modeOptions.fadeRate
+        sliderSparkRate.value = modeOptions.sparkRate
     }
 
     ColumnLayout {
         anchors.fill: parent
 
         Label {
-            text: "Bars"
+            text: "Fireworks"
             font.pixelSize: 18
             font.bold: true
             Layout.fillWidth: true
@@ -26,14 +24,14 @@ ModeOptionsPane {
         }
 
         Timer {
-            id: barsOptionsChangeDelay
+            id: fireworksOptionsChangeDelay
             interval: 750
             running: false
             repeat: false
             onTriggered: {
                 api.setModeOptions({
-                    "fadeRate": sliderBarsFadeRate.value,
-                    "barsRate": sliderBarsBarsRate.value
+                    "fadeRate": sliderFadeRate.value,
+                    "sparkRate": sliderSparkRate.value
                 });
             }
         }
@@ -43,30 +41,30 @@ ModeOptionsPane {
                 text: "Fade-Rate"
             }
             Slider {
-                id: sliderBarsFadeRate
+                id: sliderFadeRate
                 from: 0
                 to: 255
                 live: false
                 stepSize: 1
                 Layout.fillWidth: true
 
-                onMoved: barsOptionsChangeDelay.running = true
+                onMoved: fireworksOptionsChangeDelay.running = true
             }
         }
 
         RowLayout {
             Label {
-                text: "Bars-Rate"
+                text: "Spark-Rate"
             }
             Slider {
-                id: sliderBarsBarsRate
+                id: sliderSparkRate
                 from: 0
                 to: 255
                 live: false
                 stepSize: 1
                 Layout.fillWidth: true
 
-                onMoved: barsOptionsChangeDelay.running = true
+                onMoved: fireworksOptionsChangeDelay.running = true
             }
         }
 

@@ -1,7 +1,7 @@
 var api = (function () {
   let apiHost = "10.13.37.222";
   let apiBaseUrl = function () {
-    return "http://" + apiHost + "/api/v1"; // ! NOT terminated
+    return "http://" + apiHost + "/api/v1"; // ! NOT "/" terminated
   };
 
   let state = {
@@ -52,15 +52,14 @@ var api = (function () {
 
   let onModesResponse = function (modesObject) {
     log("onModesResponse(" /*+ JSON.stringify(modesObject)*/ + ")");
-// {"modes":[{"index":0,"name":"Status"},{"index":1,"name":"Bars"},{"index":2,"name":"MultiBars"},{"index":3,"name":"Fireworks"},{"index":4,"name":"Sample"},{"index":5,"name":"Hsiboy"},{"index":6,"name":"Fire"},{"index":7,"name":"Camera"},{"index":8,"name":"Network"},{"index":9,"name":"Breathe"},{"index":10,"name":"Text"}]}
 
-      // clear swipe view
+    // clear swipe view
     while (mainView.count > 0) {
       mainView.takeItem(0).destroy();
     }
 
     let finishCreation = (qmlComponent, mode) => {
-      console.log("=> finishCreation (" + mode.name + ")...");
+      log("=> finishCreation (" + mode.name + ")...");
       qmlComponent.createObject(mainView, {
         api: api,
         modeName: mode.name,
@@ -69,31 +68,65 @@ var api = (function () {
     };
 
     modesObject.modes.forEach(mode => {
-//      console.log("=> create pane for " + JSON.stringify(mode));
+//      log("=> create pane for " + JSON.stringify(mode));
       Qt.createComponent("qrc:/ModeOptions/ModeOptionsPane.qml");
       var qmlComponent;
       switch (mode.name) {
         case "Status":
-//          Qt.createComponent("qrc:/ModeOptions/ModeOptionsStatus.qml").createObject(mainView, {modeName: "Status"});
           qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsStatus.qml");
           break;
 
         case "Bars":
-//          Qt.createComponent("qrc:/ModeOptions/ModeOptionsBars.qml").createObject(mainView);
           qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsBars.qml");
           break;
 
+        case "MultiBars":
+          qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsMultiBars.qml");
+          break;
+
+        case "Fireworks":
+          qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsFireworks.qml");
+          break;
+
+        case "Sample":
+          qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsSample.qml");
+          break;
+
+        case "Hsiboy":
+          qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsHsiboy.qml");
+          break;
+
+        // case "Fire":
+        //   qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsFire.qml");
+        //   break;
+
+        // case "Camera":
+        //   qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsCamera.qml");
+        //   break;
+
+        // case "Network":
+        //   qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsNetwork.qml");
+        //   break;
+
+        // case "Breathe":
+        //   qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsBreathe.qml");
+        //   break;
+
+        // case "Text":
+        //   qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsText.qml");
+        //   break;
+
         default:
-//          console.log("(!) unable to handle " + mode.name);
+//          log("(!) unable to handle " + mode.name);
           return;
       }
 
       if (qmlComponent.status == Component.Ready) {
         finishCreation(qmlComponent, mode);
       } else if (qmlComponent.status == Component.Error) {
-        console.log("(!) component status error (" + mode.name + "):" + qmlComponent.errorString());
+        log("(!) component status error (" + mode.name + "):" + qmlComponent.errorString());
       } else {
-        console.log("(!) component not ready (" + mode.name + ")...");
+        log("(!) component not ready (" + mode.name + ")...");
         qmlComponent.statusChanged.connect(() => {finishCreation(qmlComponent, mode);});
       }
     });
@@ -105,10 +138,10 @@ var api = (function () {
     apiGet("/led/mode", (responseObject) => { onModeResponse(responseObject); if (fnAfter) fnAfter(); });
   };
 
-  let setMode = function (modeIndex) {
-    log("setMode(" + modeIndex + ")");
+  let setMode = function (modeName) {
+    log("setMode(" + modeName + ")");
 
-    apiSet("/led/mode", {"index": modeIndex}, onModeResponse);
+    apiSet("/led/mode", {"name": modeName}, onModeResponse);
   };
 
   let setModeOptions = function (modeOptions) {
@@ -119,42 +152,15 @@ var api = (function () {
   let onModeResponse = function (modeObject) {
     log("onModeResponse(" + JSON.stringify(modeObject) + ")");
     state.mode = modeObject;
-    mainView.currentItem.modeOptions = modeObject.options;
-    // mode.name.text = state.mode.name;
-    // FIXME set current view depending on "mode.name"
-/*    mainView.currentIndex = state.mode.index
 
-    switch (state.mode.index) {
-      case 0:
-        // status: no options
+    for (var i = 0; i < mainView.contentChildren.length; i++) {
+      const pane = mainView.contentChildren[i];
+      if (pane.modeName == modeObject.name) {
+        mainView.currentIndex = i;
         break;
-      case 1:
-        // bars
-        sliderBarsFadeRate.value = state.mode.options.fadeRate;
-        sliderBarsBarsRate.value = state.mode.options.barsRate;
-        break;
-      case 2:
-        // multi bars
-        sliderMultiBarsFadeRate.value = state.mode.options.fadeRate;
-        sliderMultiBarsTravelSpeed.value = state.mode.options.barTravelSpeed;
-        sliderMultiBarsNumberOfBars.value = state.mode.options.numberOfBars;
-        sliderMultiBarsMaximumFrameDelay.value = state.mode.options.maximumFrameDelay;
-        break;
-      case 3:
-        // fireworks
-        sliderFadeRate.value = state.mode.options.fadeRate;
-        sliderSparkRate.value = state.mode.options.sparkRate;
-        break;
-      case 4:
-        // sample: no options
-        break;
-      case 5:
-        // hsiboy
-        sliderAnimateSpeed.value = state.mode.options.animateSpeed;
-        comboAnimation.currentIndex = state.mode.options.animation;
-        break;
+      }
     }
-*/
+    mainView.currentItem.modeOptions = modeObject.options;
   };
 
   /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ******/
@@ -255,55 +261,3 @@ var api = (function () {
     setModeOptions,
   };
 })();
-
-/*
-{
-    "index":	2,
-    "name":	"Hsiboy",
-    "options":	{
-        "animateSpeed":	255,
-        "animation":	9
-    }
-}
-*/
-
-/*
-var modeObj;
-
-function log(text) {
-    console.log(text);
-}
-
-function getMode() {
-    log("API:getMode()");
-
-    var xhr = new XMLHttpRequest();
-
-    xhr.onreadystatechange = function() {
-        log("req state: " + xhr.readyState);
-
-        switch (xhr.readyState) {
-        case XMLHttpRequest.UNSENT:
-            break;
-        case XMLHttpRequest.OPENED:
-            break;
-        case XMLHttpRequest.HEADERS_RECEIVED:
-            break;
-        case XMLHttpRequest.LOADING:
-            break;
-        case XMLHttpRequest.DONE:
-            break;
-        }
-
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            log(xhr.response);
-
-            modeObj = JSON.parse(xhr.responseText);
-            mode.name.text = modeObj.name;
-        }
-    };
-
-    xhr.open("GET", "http://10.13.37.222/api/v1/led/mode");
-    xhr.send();
-}
-*/
