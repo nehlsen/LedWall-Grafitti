@@ -69,14 +69,26 @@ var api = (function () {
         // status: no options
         break;
       case 1:
+        // bars
+        sliderBarsFadeRate.value = state.mode.options.fadeRate;
+        sliderBarsBarsRate.value = state.mode.options.barsRate;
+        break;
+      case 2:
+        // multi bars
+        sliderMultiBarsFadeRate.value = state.mode.options.fadeRate;
+        sliderMultiBarsTravelSpeed.value = state.mode.options.barTravelSpeed;
+        sliderMultiBarsNumberOfBars.value = state.mode.options.numberOfBars;
+        sliderMultiBarsMaximumFrameDelay.value = state.mode.options.maximumFrameDelay;
+        break;
+      case 3:
         // fireworks
         sliderFadeRate.value = state.mode.options.fadeRate;
         sliderSparkRate.value = state.mode.options.sparkRate;
         break;
-      case 2:
+      case 4:
         // sample: no options
         break;
-      case 3:
+      case 5:
         // hsiboy
         sliderAnimateSpeed.value = state.mode.options.animateSpeed;
         comboAnimation.currentIndex = state.mode.options.animation;
