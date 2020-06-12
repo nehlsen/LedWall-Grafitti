@@ -116,6 +116,10 @@ var api = (function () {
         //   qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsText.qml");
         //   break;
 
+        case "Wave":
+          qmlComponent = Qt.createComponent("qrc:/ModeOptions/ModeOptionsWave.qml");
+          break;
+
         default:
 //          log("(!) unable to handle " + mode.name);
           return;

@@ -11,5 +11,6 @@
         <file>ModeOptions/ModeOptionsFireworks.qml</file>
         <file>ModeOptions/ModeOptionsSample.qml</file>
         <file>ModeOptions/ModeOptionsHsiboy.qml</file>
+        <file>ModeOptions/ModeOptionsWave.qml</file>
     </qresource>
 </RCC>
