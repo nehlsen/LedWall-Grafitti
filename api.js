@@ -122,6 +122,7 @@ var api = (function () {
 
         default:
 //          log("(!) unable to handle " + mode.name);
+          qmlComponent = Qt.createComponent("qrc:/ModeOptions/NotSupportedMode.qml");
           return;
       }
 

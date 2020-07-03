@@ -12,5 +12,6 @@
         <file>ModeOptions/ModeOptionsSample.qml</file>
         <file>ModeOptions/ModeOptionsHsiboy.qml</file>
         <file>ModeOptions/ModeOptionsWave.qml</file>
+        <file>ModeOptions/NotSupportedMode.qml</file>
     </qresource>
 </RCC>
