@@ -12,12 +12,12 @@ ModeOptionsPane {
         comboWaveDirection.currentIndex = modeOptions.waveDirection
         sliderWaveLength.value = modeOptions.waveLength
         sliderSpeed.value = modeOptions.speed
-        sliderHue.first.value = modeOptions.colorHueLow
         sliderHue.second.value = modeOptions.colorHueHigh
-        sliderSaturationLow.value = modeOptions.colorSaturationLow
-        sliderSaturationHigh.value = modeOptions.colorSaturationHigh
-        sliderValueLow.value = modeOptions.colorValueLow
-        sliderValueHigh.value = modeOptions.colorValueHigh
+        sliderHue.first.value = modeOptions.colorHueLow
+        sliderSaturation.second.value = modeOptions.colorSaturationHigh
+        sliderSaturation.first.value = modeOptions.colorSaturationLow
+        sliderValue.second.value = modeOptions.colorValueHigh
+        sliderValue.first.value = modeOptions.colorValueLow
     }
 
     ColumnLayout {
@@ -44,10 +44,10 @@ ModeOptionsPane {
                     "speed": sliderSpeed.value,
                     "colorHueLow": sliderHue.first.value,
                     "colorHueHigh": sliderHue.second.value,
-                    "colorSaturationLow": sliderSaturationLow.value,
-                    "colorSaturationHigh": sliderSaturationHigh.value,
-                    "colorValueLow": sliderValueLow.value,
-                    "colorValueHigh": sliderValueHigh.value
+                    "colorSaturationLow": sliderSaturation.first.value,
+                    "colorSaturationHigh": sliderSaturation.second.value,
+                    "colorValueLow": sliderValue.first.value,
+                    "colorValueHigh": sliderValue.second.value
                 });
             }
         }
@@ -155,77 +155,39 @@ ModeOptionsPane {
             }
         }
 
-        ColumnLayout {
+        RowLayout {
             Label {
                 text: "Saturation"
                 font.bold: true
             }
-            RowLayout {
-                Label {
-                    text: "Low"
-                }
-                Slider {
-                    id: sliderSaturationLow
-                    from: 0
-                    to: 255
-                    live: false
-                    stepSize: 1
-                    Layout.fillWidth: true
+            RangeSlider {
+                id: sliderSaturation
+                from: 0
+                to: 255
+                live: false
+                stepSize: 1
+                Layout.fillWidth: true
 
-                    onMoved: optionsChangeDelay.running = true
-                }
-            }
-            RowLayout {
-                Label {
-                    text: "High"
-                }
-                Slider {
-                    id: sliderSaturationHigh
-                    from: 0
-                    to: 255
-                    live: false
-                    stepSize: 1
-                    Layout.fillWidth: true
-
-                    onMoved: optionsChangeDelay.running = true
-                }
+                first.onMoved: optionsChangeDelay.running = true
+                second.onMoved: optionsChangeDelay.running = true
             }
         }
 
-        ColumnLayout {
+        RowLayout {
             Label {
                 text: "Value"
                 font.bold: true
             }
-            RowLayout {
-                Label {
-                    text: "Low"
-                }
-                Slider {
-                    id: sliderValueLow
-                    from: 0
-                    to: 255
-                    live: false
-                    stepSize: 1
-                    Layout.fillWidth: true
+            RangeSlider {
+                id: sliderValue
+                from: 0
+                to: 255
+                live: false
+                stepSize: 1
+                Layout.fillWidth: true
 
-                    onMoved: optionsChangeDelay.running = true
-                }
-            }
-            RowLayout {
-                Label {
-                    text: "High"
-                }
-                Slider {
-                    id: sliderValueHigh
-                    from: 0
-                    to: 255
-                    live: false
-                    stepSize: 1
-                    Layout.fillWidth: true
-
-                    onMoved: optionsChangeDelay.running = true
-                }
+                first.onMoved: optionsChangeDelay.running = true
+                second.onMoved: optionsChangeDelay.running = true
             }
         }
 
