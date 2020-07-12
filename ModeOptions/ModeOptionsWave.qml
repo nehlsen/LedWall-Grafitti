@@ -18,6 +18,8 @@ ModeOptionsPane {
         sliderSaturation.first.value = modeOptions.colorSaturationLow
         sliderValue.second.value = modeOptions.colorValueHigh
         sliderValue.first.value = modeOptions.colorValueLow
+
+        preview.updatePreview()
     }
 
     ColumnLayout {
@@ -111,6 +113,57 @@ ModeOptionsPane {
                 Layout.fillWidth: true
 
                 onMoved: optionsChangeDelay.running = true
+            }
+
+            Label {
+                text: "Preview"
+                font.bold: true
+            }
+            Rectangle {
+                id: preview
+                Layout.fillWidth: true
+                height: 52
+                radius: 8
+                gradient: Gradient {
+                    orientation: Gradient.Horizontal
+                    GradientStop { position: 0.0; color: Qt.hsva(0.0, 1, 1, 1) }
+                    GradientStop { position: 0.1; color: Qt.hsva(0.1, 1, 1, 1) }
+                    GradientStop { position: 0.2; color: Qt.hsva(0.2, 1, 1, 1) }
+                    GradientStop { position: 0.3; color: Qt.hsva(0.3, 1, 1, 1) }
+                    GradientStop { position: 0.4; color: Qt.hsva(0.4, 1, 1, 1) }
+                    GradientStop { position: 0.5; color: Qt.hsva(0.5, 1, 1, 1) }
+                    GradientStop { position: 0.6; color: Qt.hsva(0.6, 1, 1, 1) }
+                    GradientStop { position: 0.7; color: Qt.hsva(0.7, 1, 1, 1) }
+                    GradientStop { position: 0.8; color: Qt.hsva(0.8, 1, 1, 1) }
+                    GradientStop { position: 0.9; color: Qt.hsva(0.9, 1, 1, 1) }
+                }
+
+                function updatePreview() {
+                    // slider: a slider, e.g. hue
+                    // valueIndex: 0.0 for first value, 1.0 for last value
+                    function makeValue(slider, valueIndex) {
+                        return (slider.first.value/255.0)*(1.0-valueIndex)+(slider.second.value/255.0)*(valueIndex);
+                    }
+
+                    function makeColor(valueIndex) {
+                        return Qt.hsva(
+                                    makeValue(sliderHue, valueIndex),
+                                    makeValue(sliderSaturation, valueIndex),
+                                    makeValue(sliderValue, valueIndex),
+                                    1);
+                    }
+
+                    preview.gradient.stops[0].color = makeColor(0.0);
+                    preview.gradient.stops[1].color = makeColor(0.1);
+                    preview.gradient.stops[2].color = makeColor(0.2);
+                    preview.gradient.stops[3].color = makeColor(0.3);
+                    preview.gradient.stops[4].color = makeColor(0.4);
+                    preview.gradient.stops[5].color = makeColor(0.5);
+                    preview.gradient.stops[6].color = makeColor(0.6);
+                    preview.gradient.stops[7].color = makeColor(0.7);
+                    preview.gradient.stops[8].color = makeColor(0.8);
+                    preview.gradient.stops[9].color = makeColor(0.9);
+                }
             }
 
             Label {
