@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
@@ -12,8 +12,8 @@ ModeOptionsPane {
         comboWaveDirection.currentIndex = modeOptions.waveDirection
         sliderWaveLength.value = modeOptions.waveLength
         sliderSpeed.value = modeOptions.speed
-        sliderHueLow.value = modeOptions.colorHueLow
-        sliderHueHigh.value = modeOptions.colorHueHigh
+        sliderHue.first.value = modeOptions.colorHueLow
+        sliderHue.second.value = modeOptions.colorHueHigh
         sliderSaturationLow.value = modeOptions.colorSaturationLow
         sliderSaturationHigh.value = modeOptions.colorSaturationHigh
         sliderValueLow.value = modeOptions.colorValueLow
@@ -42,8 +42,8 @@ ModeOptionsPane {
                     "waveDirection": comboWaveDirection.currentIndex,
                     "waveLength": sliderWaveLength.value,
                     "speed": sliderSpeed.value,
-                    "colorHueLow": sliderHueLow.value,
-                    "colorHueHigh": sliderHueHigh.value,
+                    "colorHueLow": sliderHue.first.value,
+                    "colorHueHigh": sliderHue.second.value,
                     "colorSaturationLow": sliderSaturationLow.value,
                     "colorSaturationHigh": sliderSaturationHigh.value,
                     "colorValueLow": sliderValueLow.value,
@@ -118,39 +118,39 @@ ModeOptionsPane {
             }
         }
 
-        ColumnLayout {
+        RowLayout {
             Label {
                 text: "Hue"
                 font.bold: true
             }
-            RowLayout {
-                Label {
-                    text: "Low"
+            Rectangle {
+                Layout.fillWidth: true
+                height: sliderHue.height
+                radius: 8
+                gradient: Gradient {
+                    orientation: Gradient.Horizontal
+                    GradientStop { position: 0.0; color: Qt.hsva(0.0, 1, 1, 1) }
+                    GradientStop { position: 0.1; color: Qt.hsva(0.1, 1, 1, 1) }
+                    GradientStop { position: 0.2; color: Qt.hsva(0.2, 1, 1, 1) }
+                    GradientStop { position: 0.3; color: Qt.hsva(0.3, 1, 1, 1) }
+                    GradientStop { position: 0.4; color: Qt.hsva(0.4, 1, 1, 1) }
+                    GradientStop { position: 0.5; color: Qt.hsva(0.5, 1, 1, 1) }
+                    GradientStop { position: 0.6; color: Qt.hsva(0.6, 1, 1, 1) }
+                    GradientStop { position: 0.7; color: Qt.hsva(0.7, 1, 1, 1) }
+                    GradientStop { position: 0.8; color: Qt.hsva(0.8, 1, 1, 1) }
+                    GradientStop { position: 0.9; color: Qt.hsva(0.9, 1, 1, 1) }
                 }
-                Slider {
-                    id: sliderHueLow
+
+                RangeSlider {
+                    id: sliderHue
                     from: 0
                     to: 255
                     live: false
                     stepSize: 1
-                    Layout.fillWidth: true
+                    width: parent.width
 
-                    onMoved: optionsChangeDelay.running = true
-                }
-            }
-            RowLayout {
-                Label {
-                    text: "High"
-                }
-                Slider {
-                    id: sliderHueHigh
-                    from: 0
-                    to: 255
-                    live: false
-                    stepSize: 1
-                    Layout.fillWidth: true
-
-                    onMoved: optionsChangeDelay.running = true
+                    first.onMoved: optionsChangeDelay.running = true
+                    second.onMoved: optionsChangeDelay.running = true
                 }
             }
         }
