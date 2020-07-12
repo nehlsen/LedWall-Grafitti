@@ -13,5 +13,6 @@
         <file>ModeOptions/ModeOptionsHsiboy.qml</file>
         <file>ModeOptions/ModeOptionsWave.qml</file>
         <file>ModeOptions/NotSupportedMode.qml</file>
+        <file>contrib/grafitti.svg</file>
     </qresource>
 </RCC>
