@@ -52,41 +52,39 @@ ModeOptionsPane {
             }
         }
 
-        RowLayout {
+        GridLayout {
+            columns: 2
+
             Label {
-                    text: "Wave Mode"
-                }
-                ComboBox {
-                    id: comboWaveMode
-                    Layout.fillWidth: true
-                    model: [
-                        "Horizontal",
-                        "Vertical",
-                        "RadialCircle",
-                        "RadialRect"
-                    ]
+                text: "Wave Mode"
+            }
+            ComboBox {
+                id: comboWaveMode
+                Layout.fillWidth: true
+                model: [
+                    "Horizontal",
+                    "Vertical",
+                    "RadialCircle",
+                    "RadialRect"
+                ]
 
-                    onActivated: optionsChangeDelay.running = true
-                }
-        }
+                onActivated: optionsChangeDelay.running = true
+            }
 
-        RowLayout {
             Label {
-                    text: "Direction"
-                }
-                ComboBox {
-                    id: comboWaveDirection
-                    Layout.fillWidth: true
-                    model: [
-                        "Forward",
-                        "Reverse"
-                    ]
+                text: "Direction"
+            }
+            ComboBox {
+                id: comboWaveDirection
+                Layout.fillWidth: true
+                model: [
+                    "Forward",
+                    "Reverse"
+                ]
 
-                    onActivated: optionsChangeDelay.running = true
-                }
-        }
+                onActivated: optionsChangeDelay.running = true
+            }
 
-        RowLayout {
             Label {
                 text: "Wave Length"
             }
@@ -100,9 +98,7 @@ ModeOptionsPane {
 
                 onMoved: optionsChangeDelay.running = true
             }
-        }
 
-        RowLayout {
             Label {
                 text: "Speed"
             }
@@ -116,9 +112,7 @@ ModeOptionsPane {
 
                 onMoved: optionsChangeDelay.running = true
             }
-        }
 
-        RowLayout {
             Label {
                 text: "Hue"
                 font.bold: true
@@ -153,9 +147,7 @@ ModeOptionsPane {
                     second.onMoved: optionsChangeDelay.running = true
                 }
             }
-        }
 
-        RowLayout {
             Label {
                 text: "Saturation"
                 font.bold: true
@@ -171,9 +163,7 @@ ModeOptionsPane {
                 first.onMoved: optionsChangeDelay.running = true
                 second.onMoved: optionsChangeDelay.running = true
             }
-        }
 
-        RowLayout {
             Label {
                 text: "Value"
                 font.bold: true
