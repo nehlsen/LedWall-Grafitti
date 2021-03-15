@@ -67,7 +67,8 @@ ModeOptionsPane {
                     "Horizontal",
                     "Vertical",
                     "RadialCircle",
-                    "RadialRect"
+                    "RadialRect",
+                    "Plane"
                 ]
 
                 onActivated: optionsChangeDelay.running = true
