@@ -1,7 +1,7 @@
 var api = (function () {
   let apiHost = "10.13.37.222";
   let apiBaseUrl = function () {
-    return "http://" + apiHost + "/api/v1"; // ! NOT "/" terminated
+    return "http://" + apiHost + "/api/v2"; // ! NOT "/" terminated
   };
 
   let state = {
@@ -151,7 +151,7 @@ var api = (function () {
 
   let setModeOptions = function (modeOptions) {
     log("setModeOptions(" + JSON.stringify(modeOptions) + ")");
-    apiSet("/mode/options", modeOptions, onModeResponse);
+    apiSet("/led/mode/options", modeOptions, onModeResponse);
   };
 
   let onModeResponse = function (modeObject) {
